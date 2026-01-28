@@ -476,4 +476,10 @@
     <wire from="(800,290)" to="(800,300)"/>
     <wire from="(800,300)" to="(880,300)"/>
   </circuit>
+  <circuit name="Encoder_16to4">
+    <a name="appearance" val="logisim_evolution"/>
+    <a name="circuit" val="Encoder_16to4"/>
+    <a name="circuitnamedboxfixedsize" val="true"/>
+    <a name="simulationFrequency" val="1.0"/>
+  </circuit>
 </project>
