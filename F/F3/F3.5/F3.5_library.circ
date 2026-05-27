@@ -2146,6 +2146,7 @@
     <wire from="(690,410)" to="(760,410)"/>
   </circuit>
   <circuit name="Decoder_7_Segment_Display">
+    <a name="appearance" val="custom"/>
     <a name="circuit" val="Decoder_7_Segment_Display"/>
     <a name="circuitnamedboxfixedsize" val="true"/>
     <a name="simulationFrequency" val="1.0"/>
@@ -2687,5 +2688,280 @@
     <wire from="(510,210)" to="(540,210)"/>
     <wire from="(520,240)" to="(520,1820)"/>
     <wire from="(520,240)" to="(540,240)"/>
+  </circuit>
+  <circuit name="Comparator_3bit_maxorminoreql">
+    <a name="appearance" val="custom"/>
+    <a name="circuit" val="Comparator_3bit_maxorminoreql"/>
+    <a name="circuitnamedboxfixedsize" val="true"/>
+    <a name="simulationFrequency" val="1.0"/>
+    <appear>
+      <rect height="3" stroke="none" width="10" x="50" y="59"/>
+      <text dominant-baseline="alphabetic" fill="#404040" font-family="Dialog" font-size="12" text-anchor="start" x="65" y="64">A2</text>
+      <rect height="3" stroke="none" width="10" x="50" y="79"/>
+      <text dominant-baseline="alphabetic" fill="#404040" font-family="Dialog" font-size="12" text-anchor="start" x="65" y="84">B2</text>
+      <rect height="3" stroke="none" width="10" x="50" y="99"/>
+      <text dominant-baseline="alphabetic" fill="#404040" font-family="Dialog" font-size="12" text-anchor="start" x="65" y="104">A1</text>
+      <rect height="3" stroke="none" width="10" x="50" y="119"/>
+      <text dominant-baseline="alphabetic" fill="#404040" font-family="Dialog" font-size="12" text-anchor="start" x="65" y="124">B1</text>
+      <rect height="3" stroke="none" width="10" x="50" y="139"/>
+      <text dominant-baseline="alphabetic" fill="#404040" font-family="Dialog" font-size="12" text-anchor="start" x="65" y="144">A0</text>
+      <rect height="3" stroke="none" width="10" x="50" y="159"/>
+      <text dominant-baseline="alphabetic" fill="#404040" font-family="Dialog" font-size="12" text-anchor="start" x="65" y="164">B0</text>
+      <rect height="3" stroke="none" width="10" x="260" y="59"/>
+      <text dominant-baseline="alphabetic" fill="#404040" font-family="Dialog" font-size="12" text-anchor="end" x="255" y="64"/>
+      <rect height="3" stroke="none" width="10" x="260" y="79"/>
+      <text dominant-baseline="alphabetic" fill="#404040" font-family="Dialog" font-size="12" text-anchor="end" x="255" y="84"/>
+      <rect height="3" stroke="none" width="10" x="260" y="99"/>
+      <text dominant-baseline="alphabetic" fill="#404040" font-family="Dialog" font-size="12" text-anchor="end" x="255" y="104"/>
+      <rect height="20" stroke="none" width="200" x="60" y="170"/>
+      <rect fill="none" height="140" stroke="#000000" stroke-width="2" width="200" x="60" y="50"/>
+      <text dominant-baseline="alphabetic" fill="#ffffff" font-family="Dialog" font-size="14" font-weight="bold" text-anchor="middle" x="160" y="184">Comparator_3bit_maxo...</text>
+      <circ-anchor facing="east" x="270" y="60"/>
+      <circ-port dir="in" pin="380,330" x="50" y="60"/>
+      <circ-port dir="in" pin="380,350" x="50" y="80"/>
+      <circ-port dir="in" pin="380,480" x="50" y="100"/>
+      <circ-port dir="in" pin="380,500" x="50" y="120"/>
+      <circ-port dir="in" pin="380,620" x="50" y="140"/>
+      <circ-port dir="in" pin="380,640" x="50" y="160"/>
+      <circ-port dir="out" pin="1350,350" x="270" y="60"/>
+      <circ-port dir="out" pin="1350,500" x="270" y="80"/>
+      <circ-port dir="out" pin="1350,670" x="270" y="100"/>
+    </appear>
+    <comp lib="0" loc="(1350,350)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="facing" val="west"/>
+      <a name="label" val="Gt"/>
+      <a name="type" val="output"/>
+    </comp>
+    <comp lib="0" loc="(1350,500)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="facing" val="west"/>
+      <a name="label" val="Eq"/>
+      <a name="type" val="output"/>
+    </comp>
+    <comp lib="0" loc="(1350,670)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="facing" val="west"/>
+      <a name="label" val="Lt"/>
+      <a name="type" val="output"/>
+    </comp>
+    <comp lib="0" loc="(380,330)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="label" val="A2"/>
+    </comp>
+    <comp lib="0" loc="(380,350)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="label" val="B2"/>
+    </comp>
+    <comp lib="0" loc="(380,480)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="label" val="A1"/>
+    </comp>
+    <comp lib="0" loc="(380,500)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="label" val="B1"/>
+    </comp>
+    <comp lib="0" loc="(380,620)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="label" val="A0"/>
+    </comp>
+    <comp lib="0" loc="(380,640)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="label" val="B0"/>
+    </comp>
+    <comp lib="1" loc="(1080,370)" name="AND Gate"/>
+    <comp lib="1" loc="(1080,460)" name="AND Gate">
+      <a name="inputs" val="3"/>
+    </comp>
+    <comp lib="1" loc="(1080,700)" name="AND Gate"/>
+    <comp lib="1" loc="(1080,790)" name="AND Gate">
+      <a name="inputs" val="3"/>
+    </comp>
+    <comp lib="1" loc="(1280,350)" name="OR Gate">
+      <a name="inputs" val="3"/>
+    </comp>
+    <comp lib="1" loc="(1280,500)" name="AND Gate">
+      <a name="inputs" val="3"/>
+    </comp>
+    <comp lib="1" loc="(1280,670)" name="OR Gate">
+      <a name="inputs" val="3"/>
+    </comp>
+    <comp loc="(800,330)" name="Comparator_1bit_maxorminoreql">
+      <a name="label" val="C2"/>
+    </comp>
+    <comp loc="(800,480)" name="Comparator_1bit_maxorminoreql">
+      <a name="label" val="C1"/>
+    </comp>
+    <comp loc="(800,620)" name="Comparator_1bit_maxorminoreql">
+      <a name="label" val="C0"/>
+    </comp>
+    <wire from="(1000,460)" to="(1000,500)"/>
+    <wire from="(1000,460)" to="(1030,460)"/>
+    <wire from="(1000,500)" to="(1230,500)"/>
+    <wire from="(1010,350)" to="(1010,420)"/>
+    <wire from="(1010,350)" to="(1030,350)"/>
+    <wire from="(1010,420)" to="(1010,440)"/>
+    <wire from="(1010,420)" to="(1110,420)"/>
+    <wire from="(1010,440)" to="(1030,440)"/>
+    <wire from="(1010,480)" to="(1010,620)"/>
+    <wire from="(1010,480)" to="(1030,480)"/>
+    <wire from="(1080,370)" to="(1120,370)"/>
+    <wire from="(1080,460)" to="(1140,460)"/>
+    <wire from="(1080,700)" to="(1110,700)"/>
+    <wire from="(1080,790)" to="(1130,790)"/>
+    <wire from="(1110,420)" to="(1110,480)"/>
+    <wire from="(1110,480)" to="(1230,480)"/>
+    <wire from="(1110,520)" to="(1110,640)"/>
+    <wire from="(1110,520)" to="(1230,520)"/>
+    <wire from="(1110,670)" to="(1110,700)"/>
+    <wire from="(1110,670)" to="(1230,670)"/>
+    <wire from="(1120,350)" to="(1120,370)"/>
+    <wire from="(1120,350)" to="(1230,350)"/>
+    <wire from="(1130,690)" to="(1130,790)"/>
+    <wire from="(1130,690)" to="(1230,690)"/>
+    <wire from="(1140,370)" to="(1140,460)"/>
+    <wire from="(1140,370)" to="(1230,370)"/>
+    <wire from="(1280,350)" to="(1350,350)"/>
+    <wire from="(1280,500)" to="(1350,500)"/>
+    <wire from="(1280,670)" to="(1350,670)"/>
+    <wire from="(380,330)" to="(580,330)"/>
+    <wire from="(380,350)" to="(580,350)"/>
+    <wire from="(380,480)" to="(580,480)"/>
+    <wire from="(380,500)" to="(580,500)"/>
+    <wire from="(380,620)" to="(580,620)"/>
+    <wire from="(380,640)" to="(580,640)"/>
+    <wire from="(800,330)" to="(1230,330)"/>
+    <wire from="(800,350)" to="(950,350)"/>
+    <wire from="(800,370)" to="(970,370)"/>
+    <wire from="(800,480)" to="(980,480)"/>
+    <wire from="(800,500)" to="(910,500)"/>
+    <wire from="(800,520)" to="(930,520)"/>
+    <wire from="(800,620)" to="(1010,620)"/>
+    <wire from="(800,640)" to="(1110,640)"/>
+    <wire from="(800,660)" to="(890,660)"/>
+    <wire from="(890,660)" to="(890,810)"/>
+    <wire from="(890,810)" to="(1030,810)"/>
+    <wire from="(910,500)" to="(1000,500)"/>
+    <wire from="(910,500)" to="(910,790)"/>
+    <wire from="(910,790)" to="(1030,790)"/>
+    <wire from="(930,520)" to="(930,720)"/>
+    <wire from="(930,720)" to="(1030,720)"/>
+    <wire from="(950,350)" to="(1010,350)"/>
+    <wire from="(950,350)" to="(950,680)"/>
+    <wire from="(950,680)" to="(1030,680)"/>
+    <wire from="(950,680)" to="(950,770)"/>
+    <wire from="(950,770)" to="(1030,770)"/>
+    <wire from="(970,370)" to="(970,650)"/>
+    <wire from="(970,650)" to="(1230,650)"/>
+    <wire from="(980,390)" to="(1030,390)"/>
+    <wire from="(980,390)" to="(980,480)"/>
+  </circuit>
+  <circuit name="Comparator_1bit_maxorminoreql">
+    <a name="appearance" val="custom"/>
+    <a name="circuit" val="Comparator_1bit_maxorminoreql"/>
+    <a name="circuitnamedboxfixedsize" val="true"/>
+    <a name="simulationFrequency" val="1.0"/>
+    <appear>
+      <rect height="3" stroke="none" width="10" x="50" y="59"/>
+      <text dominant-baseline="alphabetic" fill="#404040" font-family="Dialog" font-size="12" text-anchor="start" x="65" y="64">A</text>
+      <rect height="3" stroke="none" width="10" x="50" y="79"/>
+      <text dominant-baseline="alphabetic" fill="#404040" font-family="Dialog" font-size="12" text-anchor="start" x="65" y="84">B</text>
+      <rect height="3" stroke="none" width="10" x="260" y="59"/>
+      <text dominant-baseline="alphabetic" fill="#404040" font-family="Dialog" font-size="12" text-anchor="end" x="255" y="64">A_gt_B</text>
+      <rect height="3" stroke="none" width="10" x="260" y="79"/>
+      <text dominant-baseline="alphabetic" fill="#404040" font-family="Dialog" font-size="12" text-anchor="end" x="255" y="84">A_eq_B</text>
+      <rect height="3" stroke="none" width="10" x="260" y="99"/>
+      <text dominant-baseline="alphabetic" fill="#404040" font-family="Dialog" font-size="12" text-anchor="end" x="255" y="104">A_lt_B</text>
+      <rect height="20" stroke="none" width="200" x="60" y="110"/>
+      <rect fill="none" height="80" stroke="#000000" stroke-width="2" width="200" x="60" y="50"/>
+      <text dominant-baseline="alphabetic" fill="#ffffff" font-family="Dialog" font-size="14" font-weight="bold" text-anchor="middle" x="160" y="124">Comparator_1bit_maxo...</text>
+      <circ-anchor facing="east" x="270" y="60"/>
+      <circ-port dir="in" pin="100,60" x="50" y="60"/>
+      <circ-port dir="in" pin="100,90" x="50" y="80"/>
+      <circ-port dir="out" pin="430,120" x="270" y="100"/>
+      <circ-port dir="out" pin="430,60" x="270" y="60"/>
+      <circ-port dir="out" pin="430,90" x="270" y="80"/>
+    </appear>
+    <comp lib="0" loc="(100,60)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="label" val="A"/>
+    </comp>
+    <comp lib="0" loc="(100,90)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="label" val="B"/>
+    </comp>
+    <comp lib="0" loc="(430,120)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="facing" val="west"/>
+      <a name="label" val="A_lt_B"/>
+      <a name="type" val="output"/>
+    </comp>
+    <comp lib="0" loc="(430,60)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="facing" val="west"/>
+      <a name="label" val="A_gt_B"/>
+      <a name="type" val="output"/>
+    </comp>
+    <comp lib="0" loc="(430,90)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="facing" val="west"/>
+      <a name="label" val="A_eq_B"/>
+      <a name="type" val="output"/>
+    </comp>
+    <comp lib="1" loc="(190,100)" name="NOT Gate"/>
+    <comp lib="1" loc="(190,60)" name="NOT Gate"/>
+    <comp lib="1" loc="(300,140)" name="AND Gate">
+      <a name="size" val="30"/>
+    </comp>
+    <comp lib="1" loc="(300,190)" name="AND Gate">
+      <a name="size" val="30"/>
+    </comp>
+    <comp lib="1" loc="(300,240)" name="AND Gate">
+      <a name="size" val="30"/>
+    </comp>
+    <comp lib="1" loc="(300,290)" name="AND Gate">
+      <a name="size" val="30"/>
+    </comp>
+    <comp lib="1" loc="(370,210)" name="OR Gate">
+      <a name="size" val="30"/>
+    </comp>
+    <wire from="(100,60)" to="(110,60)"/>
+    <wire from="(100,90)" to="(120,90)"/>
+    <wire from="(110,130)" to="(110,230)"/>
+    <wire from="(110,130)" to="(270,130)"/>
+    <wire from="(110,230)" to="(270,230)"/>
+    <wire from="(110,60)" to="(110,130)"/>
+    <wire from="(110,60)" to="(160,60)"/>
+    <wire from="(120,100)" to="(120,250)"/>
+    <wire from="(120,100)" to="(160,100)"/>
+    <wire from="(120,250)" to="(120,300)"/>
+    <wire from="(120,250)" to="(270,250)"/>
+    <wire from="(120,300)" to="(270,300)"/>
+    <wire from="(120,90)" to="(120,100)"/>
+    <wire from="(190,100)" to="(230,100)"/>
+    <wire from="(190,60)" to="(220,60)"/>
+    <wire from="(220,180)" to="(220,280)"/>
+    <wire from="(220,180)" to="(270,180)"/>
+    <wire from="(220,280)" to="(270,280)"/>
+    <wire from="(220,60)" to="(220,180)"/>
+    <wire from="(230,100)" to="(230,150)"/>
+    <wire from="(230,150)" to="(230,200)"/>
+    <wire from="(230,150)" to="(270,150)"/>
+    <wire from="(230,200)" to="(270,200)"/>
+    <wire from="(300,140)" to="(390,140)"/>
+    <wire from="(300,190)" to="(320,190)"/>
+    <wire from="(300,240)" to="(320,240)"/>
+    <wire from="(300,290)" to="(410,290)"/>
+    <wire from="(320,190)" to="(320,200)"/>
+    <wire from="(320,200)" to="(340,200)"/>
+    <wire from="(320,220)" to="(320,240)"/>
+    <wire from="(320,220)" to="(340,220)"/>
+    <wire from="(370,210)" to="(400,210)"/>
+    <wire from="(390,60)" to="(390,140)"/>
+    <wire from="(390,60)" to="(430,60)"/>
+    <wire from="(400,90)" to="(400,210)"/>
+    <wire from="(400,90)" to="(430,90)"/>
+    <wire from="(410,120)" to="(410,290)"/>
+    <wire from="(410,120)" to="(430,120)"/>
   </circuit>
 </project>
