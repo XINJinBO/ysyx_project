@@ -602,3 +602,616 @@ AND_R: in1=R, in2=E → NOR2.in1
 ### Encoder_16to4
 - 输入: I[15:0]
 - 输出: O[3:0]
+
+---
+
+# F3.7 时序逻辑电路设计总结
+
+## 目录
+
+16. [SR 锁存器 (NAND版本)](#16-sr-锁存器-nand版本)
+17. [D 锁存器](#17-d-锁存器)
+18. [带复位的 D 锁存器](#18-带复位的-d-锁存器)
+19. [D 触发器](#19-d-触发器)
+20. [带复位的 D 触发器](#20-带复位的-d-触发器)
+21. [下降沿触发的 D 触发器](#21-下降沿触发的-d-触发器)
+22. [带使能端的 D 触发器](#22-带使能端的-d-触发器)
+23. [4位寄存器](#23-4位寄存器)
+24. [4位计数器](#24-4位计数器)
+25. [数列求和电路](#25-数列求和电路)
+26. [6-bit 2:1 MUX](#26-6-bit-21-mux)
+27. [电子时钟 (MM:SS)](#27-电子时钟-mmss)
+
+---
+
+## 16. SR 锁存器 (NAND版本)
+
+### 电路结构
+
+两个 NAND 门交叉耦合（与 NOR 版本输入取反）：
+
+```
+NAND1: in1=S', in2=Q' → out=Q
+NAND2: in1=R', in2=Q  → out=Q'
+```
+
+### 真值表
+
+| S' | R' | Q |
+|----|----|---|
+| 1 | 1 | 保持 |
+| 1 | 0 | 0 (复位) |
+| 0 | 1 | 1 (置位) |
+| 0 | 0 | 禁止 |
+
+### 接线
+
+```
+NAND Gate 1: in1=S', in2=NAND2.out → out=Q
+NAND Gate 2: in1=R', in2=NAND1.out → out=Q'
+
+交叉耦合:
+  NAND1.out → NAND2.in2
+  NAND2.out → NAND1.in2
+```
+
+### 元件清单
+
+| 元件 | 数量 |
+|------|------|
+| NAND Gate | 2 |
+| DipSwitch (1位) | 2 (S', R') |
+| LED | 2 (Q, Q') |
+
+---
+
+## 17. D 锁存器
+
+### 原理
+
+D锁存器在WE=1时透明（输出跟随D），WE=0时保持。
+
+### 电路结构
+
+```
+NOT Gate: WE → WE'
+AND Gate 1: D, WE → S
+AND Gate 2: D', WE' → R
+SR Latch: S, R → Q, Q'
+```
+
+### 真值表
+
+| WE | D | Q |
+|----|---|---|
+| 0 | X | 保持 |
+| 1 | 0 | 0 |
+| 1 | 1 | 1 |
+
+### 接线
+
+```
+NOT Gate: in=WE → WE'
+AND Gate 1: in1=D, in2=WE → S → SR_Latch.S
+AND Gate 2: in1=NOT(D), in2=WE' → R → SR_Latch.R
+SR_Latch: S, R → Q, Q'
+```
+
+### 元件清单
+
+| 元件 | 数量 |
+|------|------|
+| NOT Gate | 2 |
+| AND Gate | 2 |
+| SR Latch (子电路) | 1 |
+| DipSwitch (2位) | 1 (D, WE) |
+| LED | 2 (Q, Q') |
+
+---
+
+## 18. 带复位的 D 锁存器
+
+### 原理
+
+在D锁存器基础上添加RESET信号，RESET=1时强制Q=0。
+
+### 电路结构
+
+```
+AND Gate: D, NOT(RESET) → D_clean
+OR Gate S: D_clean, WE → S_eff (控制置位)
+AND Gate R: NOT(D_clean), WE → R_raw
+OR Gate R: R_raw, RESET → R_eff (控制复位)
+SR Latch: S_eff, R_eff → Q, Q'
+```
+
+### 接线
+
+```
+NOT Gate 1: in=RESET → RESET'
+NOT Gate 2: in=D → D'
+AND Gate 1: in1=D, in2=RESET' → D_clean
+AND Gate 2: in1=D_clean, in2=WE → S
+AND Gate 3: in1=D', in2=RESET' → D_clean'
+AND Gate 4: in1=D_clean', in2=WE → R_raw
+OR Gate 1: in1=R_raw, in2=RESET → R
+SR Latch: S, R → Q, Q'
+```
+
+### 元件清单
+
+| 元件 | 数量 |
+|------|------|
+| NOT Gate | 2 |
+| AND Gate | 4 |
+| OR Gate | 1 |
+| SR Latch (子电路) | 1 |
+| DipSwitch (3位) | 1 (D, WE, RESET) |
+| LED | 2 (Q, Q') |
+
+---
+
+## 19. D 触发器
+
+### 原理
+
+主从D触发器：两个D锁存器，时钟互补，实现边沿触发。
+
+### 电路结构
+
+```
+Master Latch: D, CLK → Q_master (CLK=1时透明)
+Slave Latch: Q_master, CLK' → Q (CLK=0时透明)
+NOT Gate: CLK → CLK'
+```
+
+### 工作过程
+
+1. CLK=1: Master透明，Slave保持
+2. CLK↓: Master保持，Slave采样Master的值
+3. CLK=0: Master保持，Slave保持
+
+### 接线
+
+```
+NOT Gate: in=CLK → CLK'
+D_Latch_RST (Master): D, CLK, RESET → Q_master
+D_Latch_RST (Slave): Q_master, CLK', RESET → Q
+```
+
+### 元件清单
+
+| 元件 | 数量 |
+|------|------|
+| NOT Gate | 1 |
+| D_Latch_RST (子电路) | 2 |
+| DipSwitch (2位) | 1 (D, CLK) |
+| LED | 2 (Q, Q') |
+
+---
+
+## 20. 带复位的 D 触发器
+
+### 原理
+
+在D触发器基础上添加同步/异步复位功能。
+
+### 电路结构
+
+与D触发器相同，但RESET信号连接到两个锁存器。
+
+### 接线
+
+```
+NOT Gate: in=CLK → CLK'
+D_Latch_RST (Master): D, CLK, RESET → Q_master
+D_Latch_RST (Slave): Q_master, CLK', RESET → Q
+```
+
+### 元件清单
+
+| 元件 | 数量 |
+|------|------|
+| NOT Gate | 1 |
+| D_Latch_RST (子电路) | 2 |
+| DipSwitch (3位) | 1 (D, CLK, RESET) |
+| LED | 2 (Q, Q') |
+
+---
+
+## 21. 下降沿触发的 D 触发器
+
+### 原理
+
+与上升沿触发的D触发器结构相同，但CLK信号连接方式相反。
+
+### 接线
+
+```
+NOT Gate: in=CLK → CLK'
+D_Latch_RST (Master): D, CLK', RESET → Q_master
+D_Latch_RST (Slave): Q_master, CLK, RESET → Q
+```
+
+### 与上升沿触发的区别
+
+- 上升沿：Master在CLK=1时透明
+- 下降沿：Master在CLK'=1时透明（即CLK=0时）
+
+### 元件清单
+
+| 元件 | 数量 |
+|------|------|
+| NOT Gate | 1 |
+| D_Latch_RST (子电路) | 2 |
+| DipSwitch (3位) | 1 (D, CLK, RESET) |
+| LED | 2 (Q, Q') |
+
+---
+
+## 22. 带使能端的 D 触发器
+
+### 原理
+
+EN=1时，触发器正常工作；EN=0时，触发器保持当前值。
+
+### 电路结构
+
+用MUX选择：EN=1时输入D，EN=0时反馈Q。
+
+```
+MUX: sel=EN, in0=Q, in1=D → D_eff
+D_Flip_Flop_RST: D_eff, CLK, RESET → Q
+```
+
+### 接线
+
+```
+MUX (2-to-1):
+  sel=EN
+  in0=Q (反馈)
+  in1=D (新数据)
+  out → D_Flip_Flop_RST.D
+
+D_Flip_Flop_RST: D_eff, CLK, RESET → Q
+```
+
+### 元件清单
+
+| 元件 | 数量 |
+|------|------|
+| 2-to-1 MUX | 1 |
+| D_Flip_Flop_RST (子电路) | 1 |
+| DipSwitch (4位) | 1 (D, CLK, RESET, EN) |
+| LED | 2 (Q, Q') |
+
+---
+
+## 23. 4位寄存器
+
+### 原理
+
+4个D触发器并行，共享CLK和RESET信号。
+
+### 电路结构
+
+```
+DFF0: D[0], CLK, RESET → Q[0]
+DFF1: D[1], CLK, RESET → Q[1]
+DFF2: D[2], CLK, RESET → Q[2]
+DFF3: D[3], CLK, RESET → Q[3]
+```
+
+### 接线
+
+```
+D_Flip_Flop_RST ×4:
+  所有CLK连接在一起
+  所有RESET连接在一起
+  每个D输入连接对应的D[i]
+  每个Q输出连接对应的Q[i]
+```
+
+### 元件清单
+
+| 元件 | 数量 |
+|------|------|
+| D_Flip_Flop_RST (子电路) | 4 |
+| DipSwitch (4位) | 1 (D[3:0]) |
+| DipSwitch (1位) | 1 (CLK) |
+| Button | 1 (RESET) |
+| LED | 4 (Q[3:0]) |
+
+---
+
+## 24. 4位计数器
+
+### 原理
+
+寄存器 + 加法器 + 反馈，实现自动计数。
+
+### 电路结构
+
+```
+Register: D[3:0], CLK, RESET → Q[3:0]
+Adder: Q[3:0] + 1 → Sum[3:0]
+反馈: Sum[3:0] → Register.D[3:0]
+```
+
+### 接线
+
+```
+D_Register_4bit:
+  D[3:0] ← Adder.Sum[3:0]
+  CLK ← 时钟信号
+  RESET ← 复位信号
+  Q[3:0] → 输出 + Adder.A[3:0]
+
+Full_Adder_4bit:
+  A[3:0] ← Register.Q[3:0]
+  B[3:0] ← Constant(1)
+  Cin ← Ground(0)
+  Sum[3:0] → Register.D[3:0]
+```
+
+### 元件清单
+
+| 元件 | 数量 |
+|------|------|
+| D_Register_4bit (子电路) | 1 |
+| Full_Adder_4bit (子电路) | 1 |
+| Constant (4位) | 1 (值=1) |
+| Clock | 1 |
+| Button | 1 (RESET) |
+| 7-Segment Display | 1 |
+
+---
+
+## 25. 数列求和电路
+
+### 原理
+
+计算 1+2+...+10=55，需要两个寄存器分别存储累加和与计数器。
+
+### 电路结构
+
+```
+Sum Register: 存储累加和
+Counter Register: 存储当前计数
+Adder1: Sum + Counter → New_Sum
+Adder2: Counter + 1 → New_Counter
+```
+
+### 接线
+
+```
+Sum_Register (8-bit):
+  D ← Adder1.Sum
+  CLK ← 时钟
+  RESET ← 复位
+  Q → 输出 + Adder1.A
+
+Counter_Register (8-bit):
+  D ← Adder2.Sum
+  CLK ← 时钟
+  RESET ← 复位
+  Q → Adder1.B + Adder2.A
+
+Adder1 (8-bit): Sum.Q + Counter.Q → New_Sum
+Adder2 (8-bit): Counter.Q + 1 → New_Counter
+```
+
+### 终止条件
+
+当 Counter = 10 时停止计数（需要比较器和控制逻辑）。
+
+### 元件清单
+
+| 元件 | 数量 |
+|------|------|
+| D_Register_8bit (子电路) | 2 |
+| Full_Adder_8bit (子电路) | 2 |
+| Constant (8位) | 1 (值=1) |
+| Clock | 1 |
+| Button | 1 (RESET) |
+| 7-Segment Display | 2 (Sum, Counter) |
+
+---
+
+## 26. 6-bit 2:1 MUX
+
+### 逻辑表达式
+
+```
+out = (NOT(sel) AND in0) OR (sel AND in1)
+```
+
+### 1-bit MUX 接线
+
+```
+NOT Gate: sel → sel_n
+AND Gate 1: sel_n, in0 → temp0
+AND Gate 2: sel, in1 → temp1
+OR Gate: temp0, temp1 → out
+```
+
+### 6-bit MUX 结构
+
+6个1-bit MUX并行，共享sel信号：
+
+```
+MUX_bit0: sel, in0[0], in1[0] → out[0]
+MUX_bit1: sel, in0[1], in1[1] → out[1]
+...
+MUX_bit5: sel, in0[5], in1[5] → out[5]
+```
+
+### 元件清单 (1-bit MUX)
+
+| 元件 | 数量 |
+|------|------|
+| NOT Gate | 1 |
+| AND Gate | 2 |
+| OR Gate | 1 |
+
+### 元件清单 (6-bit MUX)
+
+| 元件 | 数量 |
+|------|------|
+| NOT Gate | 6 |
+| AND Gate | 12 |
+| OR Gate | 6 |
+
+---
+
+## 27. 电子时钟 (MM:SS)
+
+### 原理
+
+使用两个6-bit计数器（秒和分），每60进位一次。
+
+### 整体架构
+
+```
+Clock (1Hz) → 秒计数器 → 秒显示
+                  ↓ Carry
+              分计数器 → 分显示
+```
+
+### 秒计数器
+
+```
+6-bit Register: 存储当前秒数
+6-bit Adder: 计算 current + 1
+MUX: 选择正常计数或复位到0
+Carry检测: 当秒数=60时输出Carry信号
+```
+
+### Carry检测逻辑
+
+```
+60 = 111100 (二进制)
+Carry = B[5] AND B[4] AND B[3] AND NOT(B[2]) AND NOT(B[1]) AND NOT(B[0])
+```
+
+### 分计数器
+
+与秒计数器结构相同，但时钟信号来自秒的Carry输出。
+
+### 显示逻辑
+
+将6位二进制数(0-59)转换为十进制十位和个位：
+- 十位 = value / 10
+- 个位 = value % 10
+
+### 元件清单
+
+| 元件 | 数量 |
+|------|------|
+| Clock | 1 |
+| 6-bit Register | 2 (秒+分) |
+| 6-bit Adder | 2 (秒+分) |
+| 6-bit 2:1 MUX | 2 (秒+分) |
+| Constant(0) | 2 |
+| Constant(1) | 2 |
+| NOT Gate | 6 (Carry检测) |
+| AND Gate (6输入) | 2 (Carry检测) |
+| 显示译码器 | 2 |
+| 7-Segment Decoder | 4 |
+| 7-Segment Display | 4 |
+
+### 设计要点
+
+1. **同步复位**：使用MUX在寄存器输入端选择0，避免异步复位的毛刺问题
+2. **Carry检测**：检测60(111100)的二进制模式
+3. **进位传播**：秒Carry触发分计数器加1
+4. **显示转换**：6位二进制→十进制十位/个位
+
+---
+
+## 附录B：F3.7 常用子电路
+
+### D_Latch
+- 输入: D, WE
+- 输出: Q, Q'
+- 功能: WE=1时透明，WE=0时保持
+
+### D_Latch_RST
+- 输入: D, WE, RESET
+- 输出: Q, Q'
+- 功能: 带复位的D锁存器
+
+### D_Flip_Flop_RST
+- 输入: D, CLK, RESET
+- 输出: Q, Q'
+- 功能: 边沿触发的D触发器，带复位
+
+### D_Register_4bit
+- 输入: D[3:0], CLK, RESET
+- 输出: Q[3:0]
+- 功能: 4位寄存器
+
+### D_Register_6bit
+- 输入: D[5:0], CLK, RESET
+- 输出: Q[5:0]
+- 功能: 6位寄存器
+
+### D_Register_8bit
+- 输入: D[7:0], CLK, RESET
+- 输出: Q[7:0]
+- 功能: 8位寄存器
+
+### Full_Adder_4bit
+- 输入: A[3:0], B[3:0], Cin
+- 输出: Sum[3:0], Cout
+- 功能: 4位加法器
+
+### Full_Adder_6bit
+- 输入: A[5:0], B[5:0], Cin
+- 输出: Sum[5:0], Cout
+- 功能: 6位加法器
+
+### Full_Adder_8bit
+- 输入: A[7:0], B[7:0], Cin
+- 输出: Sum[7:0], Cout
+- 功能: 8位加法器
+
+### MUX_6bit_2to1
+- 输入: in0[5:0], in1[5:0], sel
+- 输出: out[5:0]
+- 功能: 6位2选1多路选择器
+
+---
+
+## 附录C：设计规范与最佳实践
+
+### 层次化设计
+
+1. Level 1: 基本门电路 (NOT, AND, OR, XOR)
+2. Level 2: 1-bit 功能模块 (MUX, Adder, Latch)
+3. Level 3: 多-bit 功能模块 (Register, Adder_Nbit, MUX_Nbit)
+4. Level 4: 子系统 (Counter, Display)
+5. Level 5: 完整系统 (Clock)
+
+### 信号命名规范
+
+- 时钟信号: CLK
+- 数据信号: D[7:0], Q[7:0]
+- 控制信号: RESET, WE, EN
+- 进位信号: Carry, Cout
+- 选择信号: sel
+
+### 颜色编码 (SVG)
+
+- 蓝色 (#0055aa): 时钟信号
+- 绿色 (#22aa22): 数据信号
+- 橙色 (#e67e22): 进位信号
+- 红色 (#cc0000): 复位信号
+
+### 测试建议
+
+1. 先测试基本门电路
+2. 逐层构建和测试子电路
+3. 使用LED/数码管观察输出
+4. 添加手动时钟按钮便于调试
+5. 最后使用自动时钟源
