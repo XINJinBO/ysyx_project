@@ -24,14 +24,14 @@
 
 ### 逻辑表达式
 
-```
+```text
 Y1 = I3 + I2
 Y0 = I3 + I1·I2'
 ```
 
 ### 接线
 
-```
+```text
 AND Gate: in1=I1, in2=NOT(I2) → temp
 OR Gate (Y1): in1=I3, in2=I2 → Y1
 OR Gate (Y0): in1=I3, in2=temp → Y0
@@ -58,7 +58,7 @@ NOT Gate: in=I2 → I2'
 
 ### 结构
 
-```
+```text
 16位输入分为4组，每组4位，各接一个 4-2 编码器：
 
 Encoder_0: I[3:0]   → Y0[1:0], V0
@@ -69,20 +69,20 @@ Encoder_3: I[15:12] → Y3[1:0], V3
 
 ### 高位输出 O[3:2]
 
-```
+```text
 O3 = V3
 O2 = V3' · V2 + V3 = V2 + V3  (简化)
 ```
 
 用优先级链：
-```
+```text
 O3 = V3
 O2 = V2 + V3 (但V3优先)
 ```
 
 ### 低位输出 O[1:0]
 
-```
+```text
 O1 = Y3[1]·V3 + Y2[1]·V3'·V2 + Y1[1]·V3'·V2'·V1 + Y0[1]·V3'·V2'·V1'·V0
 O0 = Y3[0]·V3 + Y2[0]·V3'·V2 + Y1[0]·V3'·V2'·V1 + Y0[0]·V3'·V2'·V1'·V0
 ```
@@ -105,7 +105,7 @@ O0 = Y3[0]·V3 + Y2[0]·V3'·V2 + Y1[0]·V3'·V2'·V1 + Y0[0]·V3'·V2'·V1'·V0
 ### 前导零 (CLZ)
 
 对输入取反后送入优先编码器：
-```
+```text
 NOT Gate × N: 对每一位取反
 Priority Encoder: 输入取反后的数据
 输出 = 前导零的数量
@@ -114,7 +114,7 @@ Priority Encoder: 输入取反后的数据
 ### 前导一 (CLO)
 
 直接送入优先编码器：
-```
+```text
 Priority Encoder: 输入原始数据
 输出 = 前导一的数量
 ```
@@ -129,13 +129,13 @@ Priority Encoder: 输入原始数据
 
 ### 逻辑表达式
 
-```
+```text
 Y = S'·A + S·B
 ```
 
 ### 接线
 
-```
+```text
 NOT Gate: in=S → S'
 AND Gate 1: in1=S', in2=A → temp1
 AND Gate 2: in1=S,  in2=B → temp2
@@ -158,7 +158,7 @@ OR Gate: in1=temp1, in2=temp2 → Y
 
 用3个 2选1 MUX 组成树形结构：
 
-```
+```text
         A ──┐
             MUX1 ──┐
         B ──┘      │
@@ -186,7 +186,7 @@ MUX3: sel=S1, in0=MUX1.out, in1=MUX2.out
 
 3个独立的 1位 4选1 MUX 并行工作，共享选择信号 S[1:0]。
 
-```
+```text
 MUX_bit0: sel=S[1:0], in0=X[0], in1=Y[0], in2=Z[0], in3=W[0] → out[0]
 MUX_bit1: sel=S[1:0], in0=X[1], in1=Y[1], in2=Z[1], in3=W[1] → out[1]
 MUX_bit2: sel=S[1:0], in0=X[2], in1=Y[2], in2=Z[2], in3=W[2] → out[2]
@@ -212,7 +212,7 @@ MUX_bit2: sel=S[1:0], in0=X[2], in1=Y[2], in2=Z[2], in3=W[2] → out[2]
 
 ### 技巧
 
-```
+```text
 实际传给译码器的最高位 = D[3] AND S
 
 当 S=0（十进制）: 最高位被强制为0，只显示0-9
@@ -221,7 +221,7 @@ MUX_bit2: sel=S[1:0], in0=X[2], in1=Y[2], in2=Z[2], in3=W[2] → out[2]
 
 ### 接线
 
-```
+```text
 AND Gate: in1=D[3], in2=S → 译码器输入 bit3
 D[2:0] 直接连接译码器输入 bit[2:0]
 7-Segment Display ← 译码器输出
@@ -243,7 +243,7 @@ D[2:0] 直接连接译码器输入 bit[2:0]
 
 ### 用 XNOR 门实现相等检测
 
-```
+```text
 XNOR Gate 0: A[0] XNOR B[0] → eq0
 XNOR Gate 1: A[1] XNOR B[1] → eq1
 XNOR Gate 2: A[2] XNOR B[2] → eq2
@@ -254,7 +254,7 @@ AND Gate (4输入): eq0 AND eq1 AND eq2 AND eq3 → A_eq_B
 
 ### 大于/小于检测
 
-```
+```text
 大于 (A > B) 逐位比较：
   gt3 = A[3] AND NOT(B[3])
   gt2 = eq3 AND A[2] AND NOT(B[2])
@@ -282,14 +282,14 @@ AND Gate (4输入): eq0 AND eq1 AND eq2 AND eq3 → A_eq_B
 
 ### 逻辑表达式
 
-```
+```text
 Sum  = A XOR B
 Cout = A AND B
 ```
 
 ### 接线
 
-```
+```text
 XOR Gate: in1=A, in2=B → Sum
 AND Gate: in1=A, in2=B → Cout
 ```
@@ -307,7 +307,7 @@ AND Gate: in1=A, in2=B → Cout
 
 ### 用2个半加器 + 1个OR门
 
-```
+```text
 Half Adder 1: A + B       → temp_sum, temp_cout1
 Half Adder 2: temp_sum + Cin → Sum, temp_cout2
 OR Gate: temp_cout1 + temp_cout2 → Cout
@@ -315,7 +315,7 @@ OR Gate: temp_cout1 + temp_cout2 → Cout
 
 ### 接线
 
-```
+```text
 XOR Gate 1: in1=A, in2=B → temp_sum
 AND Gate 1: in1=A, in2=B → temp_cout1
 
@@ -341,7 +341,7 @@ OR Gate: in1=temp_cout1, in2=temp_cout2 → Cout
 
 4个全加器级联：
 
-```
+```text
 FA0: A[0] + B[0], Cin=0   → Sum[0], Cout→C1
 FA1: A[1] + B[1], Cin=C1  → Sum[1], Cout→C2
 FA2: A[2] + B[2], Cin=C2  → Sum[2], Cout→C3
@@ -350,7 +350,7 @@ FA3: A[3] + B[3], Cin=C3  → Sum[3], Cout (进位输出)
 
 ### 输出显示
 
-```
+```text
 A数码管:  D[0]=A[0], D[1]=A[1], D[2]=A[2], D[3]=A[3]
 B数码管:  D[0]=B[0], D[1]=B[1], D[2]=B[2], D[3]=B[3]
 结果数码管: D[0]=Sum[0], D[1]=Sum[1], D[2]=Sum[2], D[3]=Sum[3]
@@ -376,7 +376,7 @@ A - B = A + NOT(B) + 1
 
 ### 接线
 
-```
+```text
 NOT Gate ×4: NOT(B[0])→Bn0, NOT(B[1])→Bn1, NOT(B[2])→Bn2, NOT(B[3])→Bn3
 
 FA0: A[0] + Bn0, Cin=1(接VCC) → Sub[0], Cout→C1
@@ -389,7 +389,7 @@ Cin=1 接电源 (VCC / 高电平)
 
 ### 输出显示
 
-```
+```text
 结果数码管: D[0]=Sub[0], D[1]=Sub[1], D[2]=Sub[2], D[3]=Sub[3]
 借位LED ← FA3.Cout (Cout=1表示无借位，Cout=0表示有借位，可加NOT门取反)
 ```
@@ -414,7 +414,7 @@ Cin=1 接电源 (VCC / 高电平)
 
 ### 加法规则
 
-```
+```text
 同号: 结果幅度 = |A| + |B|, 符号 = A的符号
 异号: 结果幅度 = ||A| - |B||, 符号 = 取幅度大的数的符号
 ```
@@ -423,40 +423,40 @@ Cin=1 接电源 (VCC / 高电平)
 
 #### 13.1 比较器 |A| ≥ |B|
 
-```
+```text
 减法器 A-B: borrow输出 = A_ge_B (有借位=0表示|A|<|B|)
 ```
 
 #### 13.2 3位加法器 (|A|+|B|)
 
-```
+```text
 3个全加器级联: A[2:0] + B[2:0], Cin=0 → add_sum[2:0]
 ```
 
 #### 13.3 3位减法器 (|A|-|B|)
 
-```
+```text
 NOT ×3 取反 B
 3个全加器: A[2:0] + NOT(B[2:0]), Cin=1 → sub_ab[2:0]
 ```
 
 #### 13.4 3位减法器 (|B|-|A|)
 
-```
+```text
 NOT ×3 取反 A
 3个全加器: B[2:0] + NOT(A[2:0]), Cin=1 → sub_ba[2:0]
 ```
 
 #### 13.5 MUX 选择结果幅度
 
-```
+```text
 MUX_d[i]: sel=A_ge_B, in0=sub_ba[i], in1=sub_ab[i] → diff_mag[i]
 MUX_r[i]: sel=diff_sign, in0=add_sum[i], in1=diff_mag[i] → result_mag[i]
 ```
 
 #### 13.6 MUX 选择结果符号
 
-```
+```text
 MUX_s1: sel=A_ge_B, in0=B[3], in1=A[3] → sign_mid
 MUX_s2: sel=diff_sign, in0=A[3], in1=sign_mid → result_sign
 ```
@@ -482,7 +482,7 @@ MUX_s2: sel=diff_sign, in0=A[3], in1=sign_mid → result_sign
 
 ### 14.1 反码 → 原码转换器
 
-```
+```text
 sm_sign = input[3]
 sm_mag[i] = input[i] XOR input[3]  (i=0,1,2)
 ```
@@ -495,7 +495,7 @@ sm_mag[i] = input[i] XOR input[3]  (i=0,1,2)
 
 ### 14.3 原码 → 反码转换器
 
-```
+```text
 result[3] = sm_result_sign
 result[i] = sm_result_mag[i] XOR sm_result_sign  (i=0,1,2)
 ```
@@ -504,7 +504,7 @@ result[i] = sm_result_mag[i] XOR sm_result_sign  (i=0,1,2)
 
 ### 完整信号流
 
-```
+```text
 反码A → [XOR] → 原码A → ┐
                          ├→ 原码加法器 → 原码结果 → [XOR] → 反码结果
 反码B → [XOR] → 原码B → ┘
@@ -529,7 +529,7 @@ result[i] = sm_result_mag[i] XOR sm_result_sign  (i=0,1,2)
 
 两个 NOR 门交叉耦合：
 
-```
+```text
 NOR1: in1=S, in2=Q' → out=Q
 NOR2: in1=R, in2=Q  → out=Q'
 ```
@@ -545,7 +545,7 @@ NOR2: in1=R, in2=Q  → out=Q'
 
 ### 接线
 
-```
+```text
 NOR Gate 1: in1=S, in2=NOR2.out → out=Q
 NOR Gate 2: in1=R, in2=NOR1.out → out=Q'
 
@@ -561,7 +561,7 @@ LED Q' ← NOR2.out
 
 在 S、R 前各加 AND 门，共用 Enable 开关 E：
 
-```
+```text
 AND_S: in1=S, in2=E → NOR1.in1
 AND_R: in1=R, in2=E → NOR2.in1
 ```
@@ -630,7 +630,7 @@ AND_R: in1=R, in2=E → NOR2.in1
 
 两个 NAND 门交叉耦合（与 NOR 版本输入取反）：
 
-```
+```text
 NAND1: in1=S', in2=Q' → out=Q
 NAND2: in1=R', in2=Q  → out=Q'
 ```
@@ -646,7 +646,7 @@ NAND2: in1=R', in2=Q  → out=Q'
 
 ### 接线
 
-```
+```text
 NAND Gate 1: in1=S', in2=NAND2.out → out=Q
 NAND Gate 2: in1=R', in2=NAND1.out → out=Q'
 
@@ -673,7 +673,7 @@ D锁存器在WE=1时透明（输出跟随D），WE=0时保持。
 
 ### 电路结构
 
-```
+```text
 NOT Gate: WE → WE'
 AND Gate 1: D, WE → S
 AND Gate 2: D', WE' → R
@@ -690,7 +690,7 @@ SR Latch: S, R → Q, Q'
 
 ### 接线
 
-```
+```text
 NOT Gate: in=WE → WE'
 AND Gate 1: in1=D, in2=WE → S → SR_Latch.S
 AND Gate 2: in1=NOT(D), in2=WE' → R → SR_Latch.R
@@ -717,7 +717,7 @@ SR_Latch: S, R → Q, Q'
 
 ### 电路结构
 
-```
+```text
 AND Gate: D, NOT(RESET) → D_clean
 OR Gate S: D_clean, WE → S_eff (控制置位)
 AND Gate R: NOT(D_clean), WE → R_raw
@@ -727,7 +727,7 @@ SR Latch: S_eff, R_eff → Q, Q'
 
 ### 接线
 
-```
+```text
 NOT Gate 1: in=RESET → RESET'
 NOT Gate 2: in=D → D'
 AND Gate 1: in1=D, in2=RESET' → D_clean
@@ -759,7 +759,7 @@ SR Latch: S, R → Q, Q'
 
 ### 电路结构
 
-```
+```text
 Master Latch: D, CLK → Q_master (CLK=1时透明)
 Slave Latch: Q_master, CLK' → Q (CLK=0时透明)
 NOT Gate: CLK → CLK'
@@ -773,7 +773,7 @@ NOT Gate: CLK → CLK'
 
 ### 接线
 
-```
+```text
 NOT Gate: in=CLK → CLK'
 D_Latch_RST (Master): D, CLK, RESET → Q_master
 D_Latch_RST (Slave): Q_master, CLK', RESET → Q
@@ -802,7 +802,7 @@ D_Latch_RST (Slave): Q_master, CLK', RESET → Q
 
 ### 接线
 
-```
+```text
 NOT Gate: in=CLK → CLK'
 D_Latch_RST (Master): D, CLK, RESET → Q_master
 D_Latch_RST (Slave): Q_master, CLK', RESET → Q
@@ -827,7 +827,7 @@ D_Latch_RST (Slave): Q_master, CLK', RESET → Q
 
 ### 接线
 
-```
+```text
 NOT Gate: in=CLK → CLK'
 D_Latch_RST (Master): D, CLK', RESET → Q_master
 D_Latch_RST (Slave): Q_master, CLK, RESET → Q
@@ -859,14 +859,14 @@ EN=1时，触发器正常工作；EN=0时，触发器保持当前值。
 
 用MUX选择：EN=1时输入D，EN=0时反馈Q。
 
-```
+```text
 MUX: sel=EN, in0=Q, in1=D → D_eff
 D_Flip_Flop_RST: D_eff, CLK, RESET → Q
 ```
 
 ### 接线
 
-```
+```text
 MUX (2-to-1):
   sel=EN
   in0=Q (反馈)
@@ -895,7 +895,7 @@ D_Flip_Flop_RST: D_eff, CLK, RESET → Q
 
 ### 电路结构
 
-```
+```text
 DFF0: D[0], CLK, RESET → Q[0]
 DFF1: D[1], CLK, RESET → Q[1]
 DFF2: D[2], CLK, RESET → Q[2]
@@ -904,7 +904,7 @@ DFF3: D[3], CLK, RESET → Q[3]
 
 ### 接线
 
-```
+```text
 D_Flip_Flop_RST ×4:
   所有CLK连接在一起
   所有RESET连接在一起
@@ -932,7 +932,7 @@ D_Flip_Flop_RST ×4:
 
 ### 电路结构
 
-```
+```text
 Register: D[3:0], CLK, RESET → Q[3:0]
 Adder: Q[3:0] + 1 → Sum[3:0]
 反馈: Sum[3:0] → Register.D[3:0]
@@ -940,7 +940,7 @@ Adder: Q[3:0] + 1 → Sum[3:0]
 
 ### 接线
 
-```
+```text
 D_Register_4bit:
   D[3:0] ← Adder.Sum[3:0]
   CLK ← 时钟信号
@@ -975,7 +975,7 @@ Full_Adder_4bit:
 
 ### 电路结构
 
-```
+```text
 Sum Register: 存储累加和
 Counter Register: 存储当前计数
 Adder1: Sum + Counter → New_Sum
@@ -984,7 +984,7 @@ Adder2: Counter + 1 → New_Counter
 
 ### 接线
 
-```
+```text
 Sum_Register (8-bit):
   D ← Adder1.Sum
   CLK ← 时钟
@@ -1022,13 +1022,13 @@ Adder2 (8-bit): Counter.Q + 1 → New_Counter
 
 ### 逻辑表达式
 
-```
+```text
 out = (NOT(sel) AND in0) OR (sel AND in1)
 ```
 
 ### 1-bit MUX 接线
 
-```
+```text
 NOT Gate: sel → sel_n
 AND Gate 1: sel_n, in0 → temp0
 AND Gate 2: sel, in1 → temp1
@@ -1039,7 +1039,7 @@ OR Gate: temp0, temp1 → out
 
 6个1-bit MUX并行，共享sel信号：
 
-```
+```text
 MUX_bit0: sel, in0[0], in1[0] → out[0]
 MUX_bit1: sel, in0[1], in1[1] → out[1]
 ...
@@ -1072,7 +1072,7 @@ MUX_bit5: sel, in0[5], in1[5] → out[5]
 
 ### 整体架构
 
-```
+```text
 Clock (1Hz) → 秒计数器 → 秒显示
                   ↓ Carry
               分计数器 → 分显示
@@ -1080,7 +1080,7 @@ Clock (1Hz) → 秒计数器 → 秒显示
 
 ### 秒计数器
 
-```
+```text
 6-bit Register: 存储当前秒数
 6-bit Adder: 计算 current + 1
 MUX: 选择正常计数或复位到0
@@ -1089,7 +1089,7 @@ Carry检测: 当秒数=60时输出Carry信号
 
 ### Carry检测逻辑
 
-```
+```text
 60 = 111100 (二进制)
 Carry = B[5] AND B[4] AND B[3] AND NOT(B[2]) AND NOT(B[1]) AND NOT(B[0])
 ```
